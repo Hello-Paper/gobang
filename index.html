@@ -53,7 +53,6 @@
             height: auto;
             aspect-ratio: 1 / 1;
         }
-        
         .control-panel {
             background: rgba(22, 33, 62, 0.85);
             backdrop-filter: blur(16px);
@@ -226,49 +225,85 @@
             background: #f59e0b;
             color: #1e1b2c;
         }
-        
-        .history-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-            margin-top: 8px;
-        }
-        .history-list {
-            flex: 1;
-            overflow-y: auto;
-            font-size: 0.8rem;
-            margin-top: 8px;
-            max-height: 200px;
-        }
-        .history-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 8px;
-            background: rgba(255,255,255,0.04);
-            border-radius: 40px;
-            margin-bottom: 6px;
-        }
-        .history-num {
-            width: 24px;
-            height: 24px;
-            background: #2d3a4e;
-            border-radius: 30px;
+        .custom-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
         }
-        .mini-stone {
-            width: 18px;
-            height: 18px;
+        .custom-alert-content {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 48px;
+            padding: 28px 32px;
+            text-align: center;
+            max-width: 320px;
+            width: 85%;
+            border: 1px solid rgba(255, 215, 150, 0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .custom-alert-stone {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            flex-shrink: 0;
+            margin: 0 auto 16px;
         }
-        .mini-stone.black { background: #111; box-shadow: 0 0 1px gray; }
-        .mini-stone.white { background: #f0f0f0; border: 1px solid #aaa; }
+        .custom-alert-stone.black {
+            background: radial-gradient(circle at 30% 35%, #4a4a4a, #111);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+        .custom-alert-stone.white {
+            background: radial-gradient(circle at 30% 35%, #ffffff, #d0d0d0);
+            border: 1px solid #aaa;
+        }
+        .custom-alert-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #facc15;
+        }
+        .custom-alert-message {
+            font-size: 1rem;
+            margin-bottom: 24px;
+            color: #e2e8f0;
+        }
+        .alert-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        .alert-btn {
+            background: linear-gradient(95deg, #4f46e5, #7c3aed);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .alert-btn-secondary {
+            background: #334155;
+        }
+        .alert-btn-secondary:hover {
+            background: #475569;
+        }
+        .alert-btn:hover {
+            transform: scale(1.02);
+            filter: brightness(1.05);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
         @media (max-width: 760px) {
             .game-container { padding: 16px; }
             .control-panel { width: 260px; height: auto; min-height: 560px; }
@@ -284,15 +319,15 @@
         </div>
 
         <div class="control-panel">
-            <div class="section-title">配置中心</div>
+            <div class="section-title">配置菜单</div>
             <div class="ai-toggle-group" id="aiToggleGroup">
-                <div class="ai-option" data-ai="on">开启AI</div>
-                <div class="ai-option" data-ai="off">关闭AI</div>
+                <div class="ai-option" data-ai="on">AI对局</div>
+                <div class="ai-option" data-ai="off">双人对弈</div>
             </div>
             <div class="section-title" style="margin-top: 8px;">我方执子</div>
             <div class="side-buttons" id="sideSelectGroup">
-                <div class="side-btn" data-side="black">⚫ 执黑先手</div>
-                <div class="side-btn" data-side="white">⚪ 执白后手</div>
+                <div class="side-btn" data-side="black">执黑先手</div>
+                <div class="side-btn" data-side="white">执白后手</div>
             </div>
 
             <div class="player-status" id="playerBlackCard">
@@ -310,17 +345,10 @@
                 </div>
             </div>
 
-            <div class="game-status-card" id="gameStatusText">⚫ 黑方落子 · 对局开始</div>
+            <div class="game-status-card" id="gameStatusText">黑方落子 · 对局开始</div>
 
-            <button class="btn btn-primary" id="restartBtn">🔄 重新开始</button>
-            <button class="btn btn-secondary" id="undoBtn">↩️ 悔棋 </button>
-
-            <div class="history-section">
-                <div class="section-title" style="margin-bottom: 8px;">落子记录</div>
-                <div class="history-list" id="historyListPanel">
-                    <div style="text-align:center; color:#7f8c8d;">暂无落子</div>
-                </div>
-            </div>
+            <button class="btn btn-primary" id="restartBtn">重新开始</button>
+            <button class="btn btn-secondary" id="undoBtn">悔棋</button>
         </div>
     </div>
 </div>
@@ -343,7 +371,6 @@
         const whiteCard = document.getElementById('playerWhiteCard');
         const blackTurnTip = document.getElementById('blackTurnTip');
         const whiteTurnTip = document.getElementById('whiteTurnTip');
-        const historyPanel = document.getElementById('historyListPanel');
 
         let cellSize = 0, margin = 0, pieceRadius = 0;
 
@@ -354,12 +381,67 @@
             pieceRadius = cellSize * 0.42;
         }
 
+        function showEndAlert(winnerPiece, isDraw) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'custom-alert';
+            
+            if (isDraw) {
+                alertDiv.innerHTML = `
+                    <div class="custom-alert-content">
+                        <div class="custom-alert-title">平局</div>
+                        <div class="custom-alert-message">棋盘已满，势均力敌</div>
+                        <div class="alert-buttons">
+                            <button class="alert-btn alert-btn-secondary" id="viewBtn">查看终局</button>
+                            <button class="alert-btn" id="restartBtnAlert">重新开始</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                const isBlackWin = (winnerPiece === 'B');
+                const winnerName = isBlackWin ? '黑方' : '白方';
+                const stoneClass = isBlackWin ? 'black' : 'white';
+                alertDiv.innerHTML = `
+                    <div class="custom-alert-content">
+                        <div class="custom-alert-stone ${stoneClass}"></div>
+                        <div class="custom-alert-title">获胜</div>
+                        <div class="custom-alert-message">${winnerName} 五子连珠，获得胜利！</div>
+                        <div class="alert-buttons">
+                            <button class="alert-btn alert-btn-secondary" id="viewBtn">查看终局</button>
+                            <button class="alert-btn" id="restartBtnAlert">重新开始</button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            document.body.appendChild(alertDiv);
+            
+            const viewBtn = document.getElementById('viewBtn');
+            const restartBtn = document.getElementById('restartBtnAlert');
+            
+            const closeAlert = () => {
+                alertDiv.remove();
+            };
+            
+            viewBtn.addEventListener('click', () => {
+                closeAlert();
+            });
+            
+            restartBtn.addEventListener('click', () => {
+                closeAlert();
+                restartGame();
+            });
+            
+            alertDiv.addEventListener('click', (e) => {
+                if (e.target === alertDiv) closeAlert();
+            });
+        }
+
         function updatePlayerStatusUI() {
             if (gameOver) {
                 blackCard.classList.remove('active');
                 whiteCard.classList.remove('active');
-                if (winner === 'B') blackTurnTip.innerText = '获胜🏆';
-                else if (winner === 'W') whiteTurnTip.innerText = '获胜🏆';
+                if (winner === 'B') blackTurnTip.innerText = '获胜';
+                else if (winner === 'W') whiteTurnTip.innerText = '获胜';
                 else { blackTurnTip.innerText = '平局'; whiteTurnTip.innerText = '平局'; }
                 return;
             }
@@ -379,12 +461,12 @@
 
         function updateStatusText() {
             if (gameOver) {
-                if (winner === 'B') gameStatusDiv.innerText = '🏆 黑方胜利！ 🏆';
-                else if (winner === 'W') gameStatusDiv.innerText = '🏆 白方胜利！ 🏆';
-                else gameStatusDiv.innerText = '平局！';
+                if (winner === 'B') gameStatusDiv.innerText = '黑方胜利！';
+                else if (winner === 'W') gameStatusDiv.innerText = '白方胜利！';
+                else gameStatusDiv.innerText = '平分秋色';
                 return;
             }
-            let turnStr = currentTurn === 'B' ? '⚫ 黑方落子' : '⚪ 白方落子';
+            let turnStr = currentTurn === 'B' ? '黑方落子' : '白方落子';
             if (aiEnabled && !gameOver && !isMyTurn()) turnStr += 'AI思考中';
             gameStatusDiv.innerText = turnStr;
         }
@@ -437,6 +519,7 @@
                 gameOver = true;
                 winner = piece;
                 refreshUI();
+                setTimeout(() => showEndAlert(winner, false), 50);
                 return true;
             }
             let isFull = true;
@@ -449,6 +532,7 @@
                 gameOver = true;
                 winner = null;
                 refreshUI();
+                setTimeout(() => showEndAlert(null, true), 50);
                 return true;
             }
             currentTurn = (currentTurn === 'B') ? 'W' : 'B';
@@ -460,20 +544,11 @@
             drawBoard();
             updatePlayerStatusUI();
             updateStatusText();
-            updateHistoryPanel();
         }
 
-        function drawBoard() {
-            if (!ctx) return;
-            const w = canvas.width, h = canvas.height;
-            const grad = ctx.createLinearGradient(0, 0, w, h);
-            grad.addColorStop(0, '#e2b87a');
-            grad.addColorStop(1, '#c99755');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, w, h);
-
-            ctx.lineWidth = 1.8;
-            ctx.strokeStyle = '#2d2418';
+        function drawGrid() {
+            ctx.lineWidth = 2.2;
+            ctx.strokeStyle = '#000000';
             ctx.shadowBlur = 0;
             for (let i = 0; i < BOARD_SIZE; i++) {
                 const startX = margin;
@@ -491,7 +566,9 @@
                 ctx.lineTo(startXv, endYv);
                 ctx.stroke();
             }
+        }
 
+        function drawStarPoints() {
             const starPositions = [[3,3],[11,3],[7,7],[3,11],[11,11]];
             for(let [x,y] of starPositions){
                 const cx = margin + x * cellSize;
@@ -505,7 +582,20 @@
                 ctx.arc(cx, cy, cellSize*0.065, 0, 2*Math.PI);
                 ctx.fill();
             }
+        }
 
+        function drawBoard() {
+            if (!ctx) return;
+            const w = canvas.width, h = canvas.height;
+            const grad = ctx.createLinearGradient(0, 0, w, h);
+            grad.addColorStop(0, '#e2b87a');
+            grad.addColorStop(1, '#c99755');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
+            
+            drawGrid();
+            drawStarPoints();
+            
             for (let i = 0; i < BOARD_SIZE; i++) {
                 for (let j = 0; j < BOARD_SIZE; j++) {
                     const val = board[i][j];
@@ -551,29 +641,6 @@
             }
         }
 
-        function updateHistoryPanel() {
-            if (moveHistory.length === 0) {
-                historyPanel.innerHTML = '<div style="text-align:center; color:#a0aec0;">暂无落子</div>';
-                return;
-            }
-            let html = '';
-            moveHistory.forEach((move, idx) => {
-                const num = idx+1;
-                const pieceShow = move.piece === 'B' ? 'black' : 'white';
-                const rowChar = move.row+1;
-                const colChar = move.col+1;
-                html += `
-                    <div class="history-item">
-                        <span class="history-num">${num}</span>
-                        <div class="mini-stone ${pieceShow}"></div>
-                        <span style="color:#e2e8f0;">(${colChar}, ${rowChar})</span>
-                    </div>
-                `;
-            });
-            historyPanel.innerHTML = html;
-            historyPanel.scrollTop = historyPanel.scrollHeight;
-        }
-
         function requestUndo() {
             if (aiEnabled) {
                 gameStatusDiv.innerText = 'AI模式下无法悔棋，请关闭AI';
@@ -588,7 +655,7 @@
                 gameStatusDiv.innerText = '没有棋子可悔';
                 return;
             }
-            const confirmUndo = confirm('是否同意悔棋？');
+            const confirmUndo = confirm('对方是否同意悔棋？\n点击确定则撤销最后一步');
             if (!confirmUndo) return;
             const last = moveHistory.pop();
             if (last) {
@@ -597,7 +664,7 @@
                 gameOver = false;
                 winner = null;
                 refreshUI();
-                gameStatusDiv.innerText = `已悔棋，轮到 ${last.piece === 'B' ? '⚫黑方' : '⚪白方'} 落子`;
+                gameStatusDiv.innerText = `已悔棋，轮到${last.piece === 'B' ? '黑方' : '白方'}落子`;
                 setTimeout(() => updateStatusText(), 1200);
             }
         }
@@ -663,6 +730,7 @@
             let bestScore = -1;
             let bestMove = null;
             const enemyPiece = aiPiece === 'B' ? 'W' : 'B';
+            
             for (let i = 0; i < BOARD_SIZE; i++) {
                 for (let j = 0; j < BOARD_SIZE; j++) {
                     if (board[i][j] !== '0') continue;
@@ -671,6 +739,13 @@
                         board[i][j] = '0';
                         return [i, j];
                     }
+                    board[i][j] = '0';
+                }
+            }
+            
+            for (let i = 0; i < BOARD_SIZE; i++) {
+                for (let j = 0; j < BOARD_SIZE; j++) {
+                    if (board[i][j] !== '0') continue;
                     board[i][j] = enemyPiece;
                     if (checkWin(i, j, enemyPiece)) {
                         board[i][j] = '0';
@@ -763,24 +838,37 @@
             if (coord) humanMove(coord.row, coord.col);
         }
 
+        function updateUIHighlights() {
+            const aiOnBtn = document.querySelector('.ai-option[data-ai="on"]');
+            const aiOffBtn = document.querySelector('.ai-option[data-ai="off"]');
+            if (aiEnabled) {
+                aiOnBtn.classList.add('active');
+                aiOffBtn.classList.remove('active');
+            } else {
+                aiOffBtn.classList.add('active');
+                aiOnBtn.classList.remove('active');
+            }
+            const blackSideBtn = document.querySelector('.side-btn[data-side="black"]');
+            const whiteSideBtn = document.querySelector('.side-btn[data-side="white"]');
+            if (mySide === 'black') {
+                blackSideBtn.classList.add('active');
+                whiteSideBtn.classList.remove('active');
+            } else {
+                whiteSideBtn.classList.add('active');
+                blackSideBtn.classList.remove('active');
+            }
+        }
+
         function setAIEnable(enabled) {
             aiEnabled = enabled;
-            document.querySelectorAll('.ai-option').forEach(opt => {
-                const val = opt.getAttribute('data-ai');
-                if ((val === 'on' && aiEnabled) || (val === 'off' && !aiEnabled)) opt.classList.add('active');
-                else opt.classList.remove('active');
-            });
+            updateUIHighlights();
             if (!gameOver && shouldAIMove() && aiEnabled) setTimeout(() => aiMove(), 50);
             refreshUI();
         }
 
         function setMySide(side) {
             mySide = side;
-            document.querySelectorAll('.side-btn').forEach(btn => {
-                const s = btn.getAttribute('data-side');
-                if (s === mySide) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
+            updateUIHighlights();
             restartGame();
         }
 
@@ -802,6 +890,7 @@
         function init() {
             updateCanvasMetrics();
             bindEvents();
+            updateUIHighlights();
             restartGame();
             window.addEventListener('resize', () => {
                 updateCanvasMetrics();
