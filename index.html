@@ -225,6 +225,11 @@
             background: #f59e0b;
             color: #1e1b2c;
         }
+        .side-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
         .custom-alert {
             position: fixed;
             top: 0;
@@ -467,12 +472,15 @@
                 return;
             }
             let turnStr = currentTurn === 'B' ? '黑方落子' : '白方落子';
-            if (aiEnabled && !gameOver && !isMyTurn()) turnStr += 'AI思考中';
+            if (aiEnabled && !gameOver && !isMyTurn()) turnStr += ' AI思考中';
             gameStatusDiv.innerText = turnStr;
         }
 
         function isMyTurn() {
             if (gameOver) return false;
+            if (!aiEnabled) {
+                return true;
+            }
             if (mySide === 'black' && currentTurn === 'B') return true;
             if (mySide === 'white' && currentTurn === 'W') return true;
             return false;
@@ -841,15 +849,21 @@
         function updateUIHighlights() {
             const aiOnBtn = document.querySelector('.ai-option[data-ai="on"]');
             const aiOffBtn = document.querySelector('.ai-option[data-ai="off"]');
+            const blackSideBtn = document.querySelector('.side-btn[data-side="black"]');
+            const whiteSideBtn = document.querySelector('.side-btn[data-side="white"]');
+            
             if (aiEnabled) {
                 aiOnBtn.classList.add('active');
                 aiOffBtn.classList.remove('active');
+                blackSideBtn.classList.remove('disabled');
+                whiteSideBtn.classList.remove('disabled');
             } else {
                 aiOffBtn.classList.add('active');
                 aiOnBtn.classList.remove('active');
+                blackSideBtn.classList.add('disabled');
+                whiteSideBtn.classList.add('disabled');
             }
-            const blackSideBtn = document.querySelector('.side-btn[data-side="black"]');
-            const whiteSideBtn = document.querySelector('.side-btn[data-side="white"]');
+            
             if (mySide === 'black') {
                 blackSideBtn.classList.add('active');
                 whiteSideBtn.classList.remove('active');
@@ -867,6 +881,7 @@
         }
 
         function setMySide(side) {
+            if (!aiEnabled) return;
             mySide = side;
             updateUIHighlights();
             restartGame();
